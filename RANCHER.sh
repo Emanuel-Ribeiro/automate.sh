@@ -36,7 +36,9 @@ print_color "green" "---------------- INSTALANDO RANCHER ------------------"
 parametros_rancher
 
 print_color "green" "Instalando HELM e adicionando repositorios..."
-curl -#L https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3 | bash
+curl -fsSL -o get_helm.sh https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3
+chmod 700 get_helm.sh
+./get_helm.sh
 helm repo add rancher-latest https://releases.rancher.com/server-charts/latest
 helm repo add jetstack https://charts.jetstack.io
 
