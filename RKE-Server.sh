@@ -42,7 +42,7 @@ systemctl disable --now firewalld
 
 print_color "green" "Atualizando os pacotes e instalando dependencias... "
 yum update -y
-yum install -y nfs-utils cryptsetup iscsi-initiator-utils
+yum install -y nfs-utils cryptsetup iscsi-initiator-utils tar
 systemctl enable --now iscsid.service
 yum update -y  
 yum upgrade -y
