@@ -76,6 +76,7 @@ print_color "green" "Criando link simbolico para o kubectl..."
 ln -s $(find /var/lib/rancher/rke2/data/ -name kubectl) /usr/local/bin/kubectl
 export KUBECONFIG=/etc/rancher/rke2/rke2.yaml
 export KUBECONFIG=/etc/rancher/rke2/rke2.yaml PATH=$PATH:/var/lib/rancher/rke2/bin
+cp /etc/rancher/rke2/rke2.yaml /root/.kube/config
 
 print_color "green" "Verificando se o node subiu..."
 kubectl get node
