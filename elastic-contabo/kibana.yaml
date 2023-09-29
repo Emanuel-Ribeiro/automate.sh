@@ -1,0 +1,50 @@
+apiVersion: kibana.k8s.elastic.co/v1
+kind: Kibana
+metadata:
+  name: elastic
+spec:
+  version: 8.8.1
+  count: 1
+  http:
+    tls:
+      selfSignedCertificate:
+        disabled: true
+  elasticsearchRef:
+    name: elastic
+  secureSettings:
+    - secretName: kibana-secret-settings
+  podTemplate:
+    spec:
+      containers:
+      - name: kibana
+        env:
+          - name: NODE_OPTIONS
+            value: "--max-old-space-size=2048"
+        resources:
+          requests:
+            memory: 1Gi
+            cpu: 0.5
+          limits:
+            memory: 2.5Gi
+            cpu: 2                   
+  config: 
+    server.publicBaseUrl: https://kb-apm.saude.gov.br
+    xpack.fleet.agents.elasticsearch.hosts: ["http://elastic-es-http:9200"]
+    xpack.fleet.agents.fleet_server.hosts: ["http://elastic-fleet-server-agent-http:8220"]
+    xpack.fleet.packages:
+      - name: fleet_server
+        version: latest
+    xpack.fleet.agentPolicies:
+      - name: Fleet Server on ECK policy
+        id: eck-fleet-server
+        is_default_fleet_server: true
+        namespace: default
+        monitoring_enabled:
+          - logs
+          - metrics
+        unenroll_timeout: 900
+        package_policies:
+        - name: fleet_server-1
+          id: fleet_server-1
+          package:
+            name: fleet_server

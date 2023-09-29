@@ -1,0 +1,31 @@
+apiVersion: beat.k8s.elastic.co/v1beta1
+kind: Beat
+metadata:
+  name: heartbeat
+spec:
+  type: heartbeat
+  version: 8.8.1
+  elasticsearchRef:
+    name: elastic
+  config:
+    heartbeat.monitors:
+      - type: tcp
+        schedule: '@every 5s'
+        hosts: ['elastic-es-ingest.elastic-system.svc:9200']
+      - type: tcp
+        schedule: '@every 5s'
+        hosts: ['elastic-kb-http.elastic-system.svc:5601']
+      - type: http
+        name: ConecteSUS Profissional
+        schedule: '@every 5s'
+        urls:
+          - "http://conectesus-profissional.saude.gov.br/"
+        check.response:
+          status: 301
+          body:
+  deployment:
+    replicas: 1
+    podTemplate:
+      spec:
+        securityContext:
+          runAsUser: 0

@@ -1,0 +1,47 @@
+apiVersion: apm.k8s.elastic.co/v1
+kind: ApmServer
+metadata:
+  name: elastic
+  namespace: elastic-system # Adicionei a definição do namespace aqui
+spec:
+  version: 8.8.1
+  count: 1
+  http:
+    tls:
+      selfSignedCertificate:
+        disabled: true
+  config:
+    name: elastic-apm
+    apm-server:
+      rum:
+        enabled: true
+        anonymous:
+          rate_limit:
+            event_limit: 300
+            ip_limit: 1000
+        allow_origins: ['*']
+        allow_headers: ['']
+        library_pattern: 'node_modules|bower_components|~'
+        exclude_from_grouping: '^/webpack'
+        source_mapping:
+          enabled: true
+          index_pattern: 'apm-*-sourcemap*'
+          cache:
+            expiration: 5m
+  secureSettings:
+    - secretName: elastic-es-elastic-user
+  podTemplate:
+    spec:
+      containers:
+      - name: apm-server
+        resources:
+          requests:
+            memory: "2Gi"
+            cpu: "1"
+          limits:
+            memory: "4Gi"
+            cpu: "2"
+  elasticsearchRef:
+    name: elastic
+  kibanaRef:
+    name: elastic
