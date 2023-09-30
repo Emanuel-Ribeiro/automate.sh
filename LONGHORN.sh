@@ -17,23 +17,7 @@ function print_color(){
   echo -e "${COLOR} $2 ${NC}"
 }
 
-############################################
-# Define os parametros do RANCHER.
-# Argumentos:
-#   Hostname e Senha de admin.
-#############################################
-function parametros_rancher(){
-  read -p "Insira o Hostname do RANCHER: " hostRancher
-  read -p "Insira a Senha do Admin do RANCHER: " senhaRancher
-
-  export HOSTNAME_RANCHER=$hostRancher
-  export SENHA_RANCHER=$senhaRancher
-}
-
 print_color "green" "---------------- INSTALANDO LONGHORN ------------------"
-
-# Definir os parametros do RANCHER
-parametros_rancher
 
 print_color "green" "Adicionando repositorio HELM do LONGHORN..."
 helm repo add longhorn https://charts.longhorn.io
