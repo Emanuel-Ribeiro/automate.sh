@@ -66,7 +66,7 @@ systemctl start rke2-server.service
 # Verificar se o RKE está rodando
 check_service_status rke2-server.service
 
-print_color "green" "---------------- Configuracao do RKE2 AGENT - Finalizada ------------------"
+print_color "green" "---------------- Configuracao do RKE2 SERVER - Finalizada ------------------"
 
 
 print_color "green" "---------------- Configurando KUBECTL ------------------"
@@ -85,5 +85,5 @@ print_color "green" "Armazenando token da master..."
 touch /opt/node-token.txt
 cat /var/lib/rancher/rke2/server/node-token >> /opt/node-token.txt
 
-print_color "green" "---------------- Configuracao do RKE2 AGENT - Finalizada ------------------"
+print_color "green" "---------------- Configuracao do RKE2 SERVER - Finalizada ------------------"
 print_color "green" "---------------- TOKEN DISPONIVEL EM /opt/node-token.txt ------------------"
