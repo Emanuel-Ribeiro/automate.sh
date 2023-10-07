@@ -1,7 +1,7 @@
 #!/bin/bash
 
 ############################################
-# Printa a mensagem em uma determinada cor.
+# Imprime uma mensagem em uma determinada cor.
 # Argumentos:
 #   Cores. ex: green, red
 #############################################
@@ -18,7 +18,7 @@ function print_color(){
 }
 
 ############################################
-# Define os parametros do RKE-Agent.
+# Define os parâmetros do RKE-Agent.
 # Argumentos:
 #   IP e token.
 #############################################
@@ -31,49 +31,49 @@ function parametros_agent(){
 }
 
 #######################################
-# Confere os status de determinado serviço. Se não estiver ativo sai do script
+# Verifica o status de determinado serviço. Se não estiver ativo, sai do script.
 # Argumentos:
 #   Nome do serviço. ex: firewalld, kubelet
 #######################################
 
 function check_service_status(){
-  service_is_active=$(sudo systemctl is-active $1)
+  service_is_active=$(systemctl is-active $1)
 
-  if [ $service_is_active = "active" ]
+  if [ "$service_is_active" = "active" ]
   then
-    echo "$1 esta ativo e rodando"
+    echo "$1 está ativo e rodando"
   else
-    echo "$1 nao esta ativo/rodando"
+    echo "$1 não está ativo/rodando"
+    exit 1
   fi
 }
 
-print_color "green" "---------------- Configurando pre requisitos ------------------"
+print_color "green" "---------------- Configurando pré-requisitos ------------------"
 
-# Definir os parametros do RKE-Agent
+# Definir os parâmetros do RKE-Agent
 parametros_agent
 
-# Desabilitar o firewalld
-print_color "green" "Desabilitando o firewalld... "
-systemctl disable --now firewalld
+# Desabilitar o UFW (firewall)
+print_color "green" "Desabilitando o UFW (firewall)... "
+systemctl disable --now ufw
 
-print_color "green" "Atualizando os pacotes e instalando dependencias... "
-yum update -y
-yum install -y nfs-utils cryptsetup iscsi-initiator-utils
-systemctl enable --now iscsid.service
-yum update -y  
-yum upgrade -y
-yum -y clean all
+print_color "green" "Atualizando os pacotes e instalando dependências... "
+sudo apt update -y
+sudo apt install -y nfs-common cryptsetup open-iscsi
+sudo systemctl enable --now open-iscsi
+sudo apt upgrade -y
+sudo apt autoremove -y
 
-# Verificar se o firewall está rodando
-check_service_status firewalld
+# Verificar se o UFW (firewall) está rodando
+check_service_status ufw
 
-print_color "green" "---------------- Configuracao de pre requisitos - Finalizada ------------------"
+print_color "green" "---------------- Configuração de pré-requisitos - Concluída ------------------"
 
 print_color "green" "---------------- Configurando RKE2 AGENT ------------------"
 
 # Instalar o RKE2
 print_color "green" "Instalando RKE2-Agent com Kubernetes 1.24..."
-curl -sfL https://get.rke2.io | INSTALL_RKE2_CHANNEL=v1.24 INSTALL_RKE2_TYPE=agent sh -
+curl -sfL https://get.rke2.io | sh -
 mkdir -p /etc/rancher/rke2/
 
 print_color "green" "Configurando o IP..."
@@ -81,12 +81,12 @@ echo "server: https://$SERVER_IP:9345" > /etc/rancher/rke2/config.yaml
 echo "token: $TOKEN" >> /etc/rancher/rke2/config.yaml
 
 print_color "green" "Iniciando RKE-Agent..."
-systemctl enable --now rke2-agent.service
-systemctl start rke2-agent.service
+sudo systemctl enable --now rke2-agent.service
+sudo systemctl start rke2-agent.service
 
 # Verificar se o RKE está rodando
 check_service_status rke2-agent.service
 
 cat /etc/rancher/rke2/config.yaml
 
-print_color "green" "---------------- Configuracao do RKE2 AGENT - Finalizada ------------------"
+print_color "green" "---------------- Configuração do RKE2 AGENT - Concluída ------------------"
