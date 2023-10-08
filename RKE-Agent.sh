@@ -41,10 +41,9 @@ function check_service_status(){
 
   if [ "$service_is_active" = "active" ]
   then
-    echo "$1 está ativo e rodando"
+    print_color "green" "$1 está ativo e rodando"
   else
-    echo "$1 não está ativo/rodando"
-    exit 1
+    print_color "red" "$1 não está ativo/rodando"
   fi
 }
 
