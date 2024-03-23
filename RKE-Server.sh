@@ -75,6 +75,7 @@ export PATH=$PATH:/etc/rancher/rke2/rke2.yaml
 
 print_color "green" "Verificando se o nó subiu..."
 kubectl get node -o wide
+cp /etc/rancher/rke2/rke2.yaml ~/.kube/config
 
 print_color "green" "Armazenando token da master..."
 ip addr | grep inet
