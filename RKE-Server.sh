@@ -54,7 +54,7 @@ print_color "green" "---------------- Configuração de pré-requisitos - Finali
 print_color "green" "---------------- Configurando RKE2 Server ------------------"
 
 # Instalar o RKE2
-print_color "green" "Instalando RKE2-Server com Kubernetes 1.24..."
+print_color "green" "Instalando RKE2-Server com Kubernetes 1.26..."
 curl -sfL https://get.rke2.io | INSTALL_RKE2_CHANNEL=v1.26 INSTALL_RKE2_TYPE=server sh -
 
 print_color "green" "Iniciando RKE-Server..."
