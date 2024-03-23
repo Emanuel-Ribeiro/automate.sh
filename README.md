@@ -39,7 +39,7 @@ Quando o script for executado ele vai lhe pedir o DNS que o rancher irá usar e 
 sudo chmod +x LONGHORN.sh
 ./LONGHORN.sh
 ```
-
+.
 
 # PS: se ao rodar o comando kubectl na master e um erro for retornado é so dar o seguinte comnado: 
 # export KUBECONFIG=/etc/rancher/rke2/rke2.yaml PATH=$PATH:/var/lib/rancher/rke2/bin
