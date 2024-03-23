@@ -42,7 +42,7 @@ systemctl disable --now ufw
 
 print_color "green" "Atualizando os pacotes e instalando dependências... "
 apt update
-apt install nfs-common -y  
+apt install nfs-common open-iscsi -y  
 apt upgrade -y
 apt autoremove -y
 
@@ -59,7 +59,6 @@ curl -sfL https://get.rke2.io | INSTALL_RKE2_CHANNEL=v1.26 INSTALL_RKE2_TYPE=ser
 
 print_color "green" "Iniciando RKE-Server..."
 systemctl enable --now rke2-server.service
-systemctl status rke2-server
 
 # Verificar se o RKE está rodando
 check_service_status rke2-server
@@ -71,12 +70,14 @@ print_color "green" "---------------- Configurando Kubectl ------------------"
 # Configurar o kubectl
 print_color "green" "Criando link simbólico para o kubectl..."
 ln -s $(find /var/lib/rancher/rke2/data/ -name kubectl) /usr/local/bin/kubectl
-export KUBECONFIG=/etc/rancher/rke2/rke2.yaml 
+export KUBECONFIG=/etc/rancher/rke2/rke2.yaml
+export PATH=$PATH:/etc/rancher/rke2/rke2.yaml
 
 print_color "green" "Verificando se o nó subiu..."
-kubectl get node
+kubectl get node -o wide
 
 print_color "green" "Armazenando token da master..."
+ip addr | grep inet
 cat /var/lib/rancher/rke2/server/node-token
 cat /var/lib/rancher/rke2/server/node-token > /opt/node-token.txt
 
