@@ -43,7 +43,7 @@ helm repo add rancher-latest https://releases.rancher.com/server-charts/latest
 helm repo add jetstack https://charts.jetstack.io
 
 print_color "green" "Instalando RANCHER via HELM..."
-helm upgrade -i cert-manager jetstack/cert-manager -n cert-manager --create-namespace --set installCRDs=true
+helm upgrade -i cert-manager jetstack/cert-manager -n cert-manager --create-namespace --set crds.enabled=true
 helm upgrade -i rancher rancher-latest/rancher --create-namespace --namespace cattle-system --set hostname=$HOSTNAME_RANCHER --set bootstrapPassword=$SENHA_RANCHER --set replicas=1
 
 print_color "green" "---------------- Instalacao do RANCHER - Finalizada ------------------"
